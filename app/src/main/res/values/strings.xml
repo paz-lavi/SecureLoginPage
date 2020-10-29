@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SecureLoginPage</string>
+    <string name="welcome_msg">Welcome to secure login page!!!</string>
+    <string name="instructions">Please try to login</string>
+    <string name="button_text">login</string>
+    <string name="success_msg">You succeed to login!!!</string>
+</resources>
