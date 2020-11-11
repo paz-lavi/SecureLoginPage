@@ -18,7 +18,7 @@ public class MyApp extends Application {
         getGAID();
     }
 
-    private void getGAID(){
+    private void getGAID() {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -33,11 +33,11 @@ public class MyApp extends Application {
                     e.printStackTrace();
                 }
 
-                try{
+                try {
                     advertId = idInfo.getId();
-                    Log.d(TAG, "run: advertId = "+advertId);
-                }catch (Exception e){
-                    advertId ="error";
+                    Log.d(TAG, "run: advertId = " + advertId);
+                } catch (Exception e) {
+                    advertId = "error";
                     e.printStackTrace();
                 }
             }

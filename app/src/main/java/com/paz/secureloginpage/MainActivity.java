@@ -1,7 +1,5 @@
 package com.paz.secureloginpage;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -9,18 +7,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.app.AppCompatActivity;
 
-import static java.lang.Math.abs;
+import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private final String TAG = "MyTag: " + getClass().getCanonicalName();
@@ -31,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mAccelerometer;
     private float x;
     private float y;
+    private String deepLink = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Intent intent = getIntent();
         String action = intent.getAction();
         Uri data = intent.getData();
+        deepLink = data == null ? "null :( ... will not work " : data.toString();
         Log.d(TAG, "onCreate: data = " + data);
+        Log.d(TAG, "onCreate: deeplink = " + deepLink);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 dv.isScreenRotationLocked(),
                 dv.isLandscape(),
                 dv.isSamsung(),
-                !dv.isBatteryBetween70TO90(),
+                dv.isBatteryBetween70TO90(),
                 dv.isInChargingByUSB(),
                 dv.isSomeAppInstall(),
                 dv.isConnectedToWifi(),
@@ -72,14 +69,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         for (boolean b : loginConditions) {
             allConditionsTrue = allConditionsTrue && b;
         }
-        boolean gaid = MyApp.advertId.equals( main_EDT_pass.getText().toString());
-        Log.d(TAG, "loginClicked: advertId =      " + MyApp.advertId);
-        Log.d(TAG, "loginClicked: main_EDT_pass = " + main_EDT_pass.getText().toString());
+        boolean gaid = MyApp.advertId.equals(main_EDT_pass.getText().toString());
+        boolean dp = deepLink.equals(scheme);
+        Log.d(TAG, "loginClicked: deep link = " + dp);
         Log.d(TAG, "loginClicked: gaid = " + gaid);
         Log.d(TAG, "loginClicked: all con = " + allConditionsTrue);
-        if (allConditionsTrue && gaid)
+        if (allConditionsTrue && gaid && dp)
             makeIntent(SuccessActivity.class);
-        else Toast.makeText(this, "1 or more of the conditions are missing", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "1 or more of the conditions are missing", Toast.LENGTH_SHORT).show();
 
     }
 
